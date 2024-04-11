@@ -6,6 +6,7 @@ function App() {
   // 최상위 컴포넌트
   const [order, setOrder] = useState("createdAt");
   const [items, setItems] = useState([]);
+  const [cursor, setCursor] = useState();
 
   const handleNewClick = () => setOrder("createdAt");
   const handleCalorieClick = () => setOrder("calorie");
@@ -15,13 +16,27 @@ function App() {
     setItems(nextItems);
   };
 
-  const handleLoad = async (orderQuery) => {
-    const { foods } = await getFoods(orderQuery);
-    setItems(foods);
+  const handleLoad = async (options) => {
+    const { foods, paging } = await getFoods(options);
+    if (!options.cursor) {
+      setItems(foods);
+    } else {
+      setItems((prevItems) => [...prevItems, ...foods]);
+    }
+    setCursor(paging.nextCursor);
+  };
+
+  const handleLoadMore = () => {
+    handleLoad({
+      order,
+      cursor,
+    });
   };
 
   useEffect(() => {
-    handleLoad(order);
+    handleLoad({
+      order,
+    });
   }, [order]);
 
   return (
@@ -31,6 +46,7 @@ function App() {
         <button onClick={handleCalorieClick}>칼로리순</button>
       </div>
       <FoodList items={items} onDelete={handleDelete} />
+      {cursor && <button onClick={handleLoadMore}>더보기</button>}
     </div>
   );
 }
