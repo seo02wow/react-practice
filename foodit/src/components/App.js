@@ -1,6 +1,6 @@
 import FoodList from "./FoodList";
 import { getFoods } from "./api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   // 최상위 컴포넌트
@@ -16,10 +16,14 @@ function App() {
     setItems(nextItems);
   };
 
-  const handleLoadClick = async () => {
+  const handleLoad = async () => {
     const { foods } = await getFoods();
     setItems(foods);
   };
+
+  useEffect(() => {
+    handleLoad();
+  }, []);
 
   return (
     <div>
@@ -28,7 +32,6 @@ function App() {
         <button onClick={handleCalorieClick}>칼로리순</button>
       </div>
       <FoodList items={items} onDelete={handleDelete} />
-      <button onClick={handleLoadClick}>불러오기</button>
     </div>
   );
 }
