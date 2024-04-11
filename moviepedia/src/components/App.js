@@ -6,7 +6,6 @@ function App() {
   // 최상위 컴포넌트
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
-  const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
   const handleNewstClick = () => setOrder("createdAt");
   const handleBestClick = () => setOrder("rating");
@@ -16,14 +15,14 @@ function App() {
     setItems(nextItems);
   };
 
-  const handleLoad = async () => {
-    const { reviews } = await getReviews();
+  const handleLoad = async (orderQuery) => {
+    const { reviews } = await getReviews(orderQuery);
     setItems(reviews);
   };
 
   useEffect(() => {
-    handleLoad();
-  }, []);
+    handleLoad(order);
+  }, [order]);
 
   return (
     <div>

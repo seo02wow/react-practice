@@ -6,7 +6,6 @@ function App() {
   // 최상위 컴포넌트
   const [order, setOrder] = useState("createdAt");
   const [items, setItems] = useState([]);
-  const sortedMenus = items.sort((a, b) => b[order] - a[order]);
 
   const handleNewClick = () => setOrder("createdAt");
   const handleCalorieClick = () => setOrder("calorie");
@@ -16,14 +15,14 @@ function App() {
     setItems(nextItems);
   };
 
-  const handleLoad = async () => {
-    const { foods } = await getFoods();
+  const handleLoad = async (orderQuery) => {
+    const { foods } = await getFoods(orderQuery);
     setItems(foods);
   };
 
   useEffect(() => {
-    handleLoad();
-  }, []);
+    handleLoad(order);
+  }, [order]);
 
   return (
     <div>
