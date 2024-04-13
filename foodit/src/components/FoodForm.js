@@ -1,10 +1,12 @@
 import { useState } from "react";
+import FileInput from "./FileInput";
 
 function FoodForm() {
   const [values, setValues] = useState({
     title: "",
     calorie: 0,
     content: "",
+    imgFile: null,
   });
 
   // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
@@ -17,12 +19,17 @@ function FoodForm() {
         return value;
     }
   }
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
+
+  const handleChange = (name, value) => {
     setValues((prevValues) => ({
       ...prevValues,
-      [name]: sanitize(type, value),
+      [name]: value,
     }));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type } = e.target;
+    handleChange(name, sanitize(type, value));
   };
 
   const handleSubmit = (e) => {
@@ -32,16 +39,25 @@ function FoodForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="title" onChange={handleChange} value={values.title}></input>
+      <FileInput
+        name="imgFile"
+        value={values.imgFile}
+        onChange={handleChange}
+      />
+      <input
+        name="title"
+        onChange={handleInputChange}
+        value={values.title}
+      ></input>
       <input
         type="number"
         name="calorie"
-        onChange={handleChange}
+        onChange={handleInputChange}
         value={values.calorie}
       ></input>
       <input
         name="content"
-        onChange={handleChange}
+        onChange={handleInputChange}
         value={values.content}
       ></input>
       <button type="submit">확인</button>
