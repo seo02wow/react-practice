@@ -1,9 +1,25 @@
+import { useRef } from "react";
+
 function FileInput({ name, value, onChange }) {
+  const inputRef = useRef();
+
   const handleChange = (e) => {
     const nextVlaue = e.target.files[0];
     onChange(name, nextVlaue);
   };
 
-  return <input type="file" onChange={handleChange} />;
+  const handleClearClick = () => {
+    const inputNode = inputRef.current;
+    if (!inputNode) return;
+    inputNode.value = "";
+    onChange(name, null);
+  };
+
+  return (
+    <div>
+      <input type="file" onChange={handleChange} ref={inputRef} />
+      {value && <button onClick={handleClearClick}> X </button>}
+    </div>
+  );
 }
 export default FileInput;
