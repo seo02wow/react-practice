@@ -1,32 +1,50 @@
 import { useState } from "react";
 
 function FoodForm() {
-  const [title, setTitle] = useState("");
-  const [calorie, setCalorie] = useState(0);
-  const [content, setContent] = useState("");
+  const [values, setValues] = useState({
+    title: "",
+    calorie: 0,
+    content: "",
+  });
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+  // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
+  function sanitize(type, value) {
+    switch (type) {
+      case "number":
+        return Number(value) || 0;
+
+      default:
+        return value;
+    }
+  }
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: sanitize(type, value),
+    }));
   };
 
-  const handleCalorieChange = (e) => {
-    const nextCalorie = Number(e.target.value) || 0;
-    setCalorie(nextCalorie);
-  };
-
-  const handleContentChange = (e) => {
-    setContent(e.target.value);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(values);
   };
 
   return (
-    <form>
-      <input name="title" onChange={handleTitleChange}></input>
+    <form onSubmit={handleSubmit}>
+      <input name="title" onChange={handleChange} value={values.title}></input>
       <input
         type="number"
         name="calorie"
-        onChange={handleCalorieChange}
+        onChange={handleChange}
+        value={values.calorie}
       ></input>
-      <input name="content" onChange={handleContentChange}></input>
+      <input
+        name="content"
+        onChange={handleChange}
+        value={values.content}
+      ></input>
+      <button type="submit">확인</button>
     </form>
   );
 }
