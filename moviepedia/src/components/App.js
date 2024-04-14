@@ -56,6 +56,10 @@ function App() {
     handleLoad({ order, offset, limit: LIMIT });
   };
 
+  const handleSubmitSuccess = (review) => {
+    setItems((prevItems) => [review, ...prevItems]);
+  };
+
   useEffect(() => {
     handleLoad({ order, offset: 0, limit: LIMIT });
   }, [order]);
@@ -66,7 +70,7 @@ function App() {
         <button onClick={handleNewstClick}>최신순</button>
         <button onClick={handleBestClick}>베스트순</button>
       </div>
-      <ReviewForm />
+      <ReviewForm onSubmitSuccess={handleSubmitSuccess} />
       <ReviewList items={sortedItems} onDelete={handleDelete} />
 
       {/* hasNext 값이 true인 경우 실행, false인 경우 표현식 계산하지 않고 hasNext의 값을 사용함 (리액트에서 false 값은 렌더링하지 않음)  

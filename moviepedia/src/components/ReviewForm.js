@@ -11,7 +11,7 @@ const INITIAL_VALUES = {
   imgFile: null,
 };
 
-function ReviewForm() {
+function ReviewForm({ onSubmitSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 처리
   const [submittingError, setSubmittingError] = useState(null); // 에러 처리
   const [values, setValues] = useState(INITIAL_VALUES);
@@ -30,21 +30,27 @@ function ReviewForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("rating", values.rating);
     formData.append("content", values.content);
     formData.append("imgFile", values.imgFile);
+
+    let result;
     try {
       setSubmittingError(null);
       setIsSubmitting(true); // 로딩 중일 때 버튼 비활성화
-      await createReview(formData);
+      result = await createReview(formData);
     } catch (error) {
       setSubmittingError(error);
       return;
     } finally {
       setIsSubmitting(false);
     }
+
+    const { review } = result;
+    onSubmitSuccess(review);
 
     setValues(INITIAL_VALUES); // 초기화
   };
