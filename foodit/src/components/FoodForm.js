@@ -1,13 +1,16 @@
 import { useState } from "react";
 import FileInput from "./FileInput";
+import { createFood } from "./api";
+
+const INITIAL_VALUES = {
+  title: "",
+  calorie: 0,
+  content: "",
+  imgFile: null,
+};
 
 function FoodForm() {
-  const [values, setValues] = useState({
-    title: "",
-    calorie: 0,
-    content: "",
-    imgFile: null,
-  });
+  const [values, setValues] = useState(INITIAL_VALUES);
 
   // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
   function sanitize(type, value) {
@@ -32,8 +35,15 @@ function FoodForm() {
     handleChange(name, sanitize(type, value));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("imgFile", values.imgFile);
+    formData.append("title", values.title);
+    formData.append("calorie", values.calorie);
+    formData.append("content", values.content);
+    await createFood(formData);
+    setValues(INITIAL_VALUES);
   };
 
   return (
