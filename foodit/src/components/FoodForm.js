@@ -9,7 +9,7 @@ const INITIAL_VALUES = {
   imgFile: null,
 };
 
-function FoodForm() {
+function FoodForm({ onSubmitSuccess }) {
   const [values, setValues] = useState(INITIAL_VALUES);
 
   // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
@@ -42,7 +42,9 @@ function FoodForm() {
     formData.append("title", values.title);
     formData.append("calorie", values.calorie);
     formData.append("content", values.content);
-    await createFood(formData);
+    let result = await createFood(formData);
+    const { food } = result;
+    onSubmitSuccess(food);
     setValues(INITIAL_VALUES);
   };
 
