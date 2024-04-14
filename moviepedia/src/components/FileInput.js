@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-function FileInput({ name, value, onChange }) {
-  const [preview, setPreview] = useState();
+function FileInput({ name, value, onChange, initalPreview }) {
+  const [preview, setPreview] = useState(initalPreview);
 
   const inputRef = useRef();
 
@@ -27,10 +27,10 @@ function FileInput({ name, value, onChange }) {
 
     return () => {
       // 정리 함수
-      setPreview(); // 빈 값으로 초기화
+      setPreview(initalPreview); // 빈 값으로 초기화
       URL.revokeObjectURL(nextPreview); // ObjectURL해제
     };
-  }, [value]);
+  }, [value, initalPreview]);
 
   return (
     <div>
