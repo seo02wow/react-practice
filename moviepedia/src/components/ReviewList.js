@@ -30,7 +30,7 @@ function ReviewListItem({ item, onDelete, onEdit }) {
   );
 }
 
-function ReviewList({ items, onDelete }) {
+function ReviewList({ items, onDelete, onUpdate, onUpdateSuccess }) {
   const [editingId, setEditingId] = useState(null);
 
   const handleCancle = () => setEditingId(null);
@@ -39,14 +39,22 @@ function ReviewList({ items, onDelete }) {
     <ul>
       {items.map((item) => {
         if (item.id === editingId) {
-          const { imgUrl, title, rating, content } = item;
-          const initalValues = { title, rating, content };
+          const { id, imgUrl, title, rating, content } = item;
+          const initalValues = { title, rating, content, imgFile: null };
+
+          const handleSubmit = (formData) => onUpdate(id, formData);
+          const handleSubmitSuccess = (review) => {
+            onUpdateSuccess(review);
+            setEditingId(null); // 입력 폼 닫음
+          };
           return (
             <li key={item.id}>
               <ReviewForm
                 initalValues={initalValues}
                 initalPreview={imgUrl}
                 onCancel={handleCancle}
+                onSubmit={handleSubmit}
+                onSubmitSuccess={handleSubmitSuccess}
               />
             </li>
           );

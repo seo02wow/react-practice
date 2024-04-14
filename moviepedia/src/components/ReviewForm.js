@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./ReviewForm.css";
 import FileInput from "./FileInput";
 import Ratinginput from "./RatingInput";
-import { createReview } from "./api";
 
 const INITIAL_VALUES = {
   title: "",
@@ -16,6 +15,7 @@ function ReviewForm({
   initalPreview,
   onSubmitSuccess,
   onCancel,
+  onSubmit,
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 처리
   const [submittingError, setSubmittingError] = useState(null); // 에러 처리
@@ -46,7 +46,7 @@ function ReviewForm({
     try {
       setSubmittingError(null);
       setIsSubmitting(true); // 로딩 중일 때 버튼 비활성화
-      result = await createReview(formData);
+      result = await onSubmit(formData);
     } catch (error) {
       setSubmittingError(error);
       return;
@@ -55,9 +55,9 @@ function ReviewForm({
     }
 
     const { review } = result;
-    onSubmitSuccess(review);
 
     setValues(INITIAL_VALUES); // 초기화
+    onSubmitSuccess(review);
   };
 
   return (

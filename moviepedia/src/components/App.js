@@ -1,6 +1,6 @@
 import ReviewList from "./ReviewList";
 import { useEffect, useState } from "react";
-import { getReviews } from "./api";
+import { createReview, getReviews, updateReview } from "./api";
 import ReviewForm from "./ReviewForm";
 
 const LIMIT = 6;
@@ -56,8 +56,21 @@ function App() {
     handleLoad({ order, offset, limit: LIMIT });
   };
 
-  const handleSubmitSuccess = (review) => {
+  const handleCreateSuccess = (review) => {
     setItems((prevItems) => [review, ...prevItems]);
+  };
+
+  const handleUpdateSuccess = (review) => {
+    setItems((prevItems) => {
+      const splitIdx = prevItems.findIndex((item) => item.id === review.id);
+      // 수정할 인덱스 찾기
+      // 기존 리뷰 배열에서 같은 아이디에 해당하는 리뷰 갈아끼움 ..
+      return [
+        ...prevItems.slice(0, splitIdx),
+        review,
+        ...prevItems.slice(splitIdx + 1),
+      ];
+    });
   };
 
   useEffect(() => {
@@ -70,8 +83,16 @@ function App() {
         <button onClick={handleNewstClick}>최신순</button>
         <button onClick={handleBestClick}>베스트순</button>
       </div>
-      <ReviewForm onSubmitSuccess={handleSubmitSuccess} />
-      <ReviewList items={sortedItems} onDelete={handleDelete} />
+      <ReviewForm
+        onSubmitSuccess={handleCreateSuccess}
+        onSubmit={createReview}
+      />
+      <ReviewList
+        items={sortedItems}
+        onDelete={handleDelete}
+        onUpdate={updateReview}
+        onUpdateSuccess={handleUpdateSuccess}
+      />
 
       {/* hasNext 값이 true인 경우 실행, false인 경우 표현식 계산하지 않고 hasNext의 값을 사용함 (리액트에서 false 값은 렌더링하지 않음)  
       로딩되고 있는 경우에는 버튼을 비활성화 처리 
