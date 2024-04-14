@@ -11,6 +11,8 @@ const INITIAL_VALUES = {
 
 function FoodForm({ onSubmitSuccess }) {
   const [values, setValues] = useState(INITIAL_VALUES);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 처리
+  const [submittingError, setSubmittingError] = useState(null); // 에러 처리
 
   // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
   function sanitize(type, value) {
@@ -42,9 +44,21 @@ function FoodForm({ onSubmitSuccess }) {
     formData.append("title", values.title);
     formData.append("calorie", values.calorie);
     formData.append("content", values.content);
-    let result = await createFood(formData);
+    let result;
+    try {
+      setIsSubmitting(true);
+      setSubmittingError(null);
+      result = await createFood(formData);
+    } catch (error) {
+      setSubmittingError(error);
+      return;
+    } finally {
+      setIsSubmitting(false);
+    }
+
     const { food } = result;
     onSubmitSuccess(food);
+
     setValues(INITIAL_VALUES);
   };
 
@@ -71,7 +85,10 @@ function FoodForm({ onSubmitSuccess }) {
         onChange={handleInputChange}
         value={values.content}
       ></input>
-      <button type="submit">확인</button>
+      <button type="submit" disabled={isSubmitting}>
+        확인
+      </button>
+      {submittingError?.message && <div>{submittingError.message}</div>}
     </form>
   );
 }
