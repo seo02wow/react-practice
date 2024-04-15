@@ -2,6 +2,7 @@ import ReviewList from "./ReviewList";
 import { useEffect, useState } from "react";
 import { createReview, deleteReview, getReviews, updateReview } from "./api";
 import ReviewForm from "./ReviewForm";
+import useAsync from "./hooks/useAsync";
 
 const LIMIT = 6;
 
@@ -11,8 +12,7 @@ function App() {
   const [order, setOrder] = useState("createdAt");
   const [offset, setOffset] = useState(0);
   const [hasNext, setHasNext] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState(null);
+  const [isLoading, loadingError, getReviewsAsync] = useAsync(getReviews);
 
   const handleNewstClick = () => setOrder("createdAt");
   const handleBestClick = () => setOrder("rating");
@@ -29,20 +29,9 @@ function App() {
   };
 
   const handleLoad = async (options) => {
-    let result;
-    try {
-      // 로딩 시작
-      setIsLoading(true);
-      setLoadingError(null);
-      result = await getReviews(options);
-    } catch (error) {
-      setLoadingError(error);
-      return;
-    } finally {
-      // 리퀘스트가 실패하거나 성공하는 경우
-      // 오류가 나도 항상 로딩 값은 false
-      setIsLoading(false);
-    }
+    const result = await getReviewsAsync(options);
+    if (!result) return;
+
     const { reviews, paging } = result;
     if (options.offset === 0) {
       setItems(reviews);
