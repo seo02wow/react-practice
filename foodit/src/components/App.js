@@ -1,6 +1,6 @@
 import FoodForm from "./FoodForm";
 import FoodList from "./FoodList";
-import { createFood, getFoods, updateFood } from "./api";
+import { createFood, deleteFood, getFoods, updateFood } from "./api";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -15,9 +15,10 @@ function App() {
   const handleNewClick = () => setOrder("createdAt");
   const handleCalorieClick = () => setOrder("calorie");
 
-  const handleDelete = (id) => {
-    const nextItems = items.filter((item) => item.id !== id);
-    setItems(nextItems);
+  const handleDelete = async (id) => {
+    const reslut = await deleteFood(id);
+    if (!reslut) return;
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const handleLoad = async (options) => {
