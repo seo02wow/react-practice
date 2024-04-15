@@ -1,7 +1,7 @@
 import FoodForm from "./FoodForm";
 import FoodList from "./FoodList";
 import { createFood, deleteFood, getFoods, updateFood } from "./api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAsync from "./hooks/useAsync";
 
 function App() {
@@ -21,18 +21,21 @@ function App() {
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  const handleLoad = async (options) => {
-    const reslut = await getFoodAsync(options);
-    if (!reslut) return;
+  const handleLoad = useCallback(
+    async (options) => {
+      const reslut = await getFoodAsync(options);
+      if (!reslut) return;
 
-    const { foods, paging } = reslut;
-    if (!options.cursor) {
-      setItems(foods);
-    } else {
-      setItems((prevItems) => [...prevItems, ...foods]);
-    }
-    setCursor(paging.nextCursor);
-  };
+      const { foods, paging } = reslut;
+      if (!options.cursor) {
+        setItems(foods);
+      } else {
+        setItems((prevItems) => [...prevItems, ...foods]);
+      }
+      setCursor(paging.nextCursor);
+    },
+    [getFoodAsync]
+  );
 
   const handleLoadMore = () => {
     handleLoad({
@@ -68,7 +71,7 @@ function App() {
       order,
       search,
     });
-  }, [order, search]);
+  }, [order, search, handleLoad]);
 
   return (
     <div>
