@@ -1,5 +1,5 @@
 import ReviewList from "./ReviewList";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createReview, deleteReview, getReviews, updateReview } from "./api";
 import ReviewForm from "./ReviewForm";
 import useAsync from "./hooks/useAsync";
@@ -28,21 +28,24 @@ function App() {
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  const handleLoad = async (options) => {
-    const result = await getReviewsAsync(options);
-    if (!result) return;
+  const handleLoad = useCallback(
+    async (options) => {
+      const result = await getReviewsAsync(options);
+      if (!result) return;
 
-    const { reviews, paging } = result;
-    if (options.offset === 0) {
-      setItems(reviews);
-    } else {
-      // previtems : 현재 state 값
-      setItems((previtems) => [...previtems, ...reviews]);
-    }
-    // 데이터를 받아온 후 작업 offset limit값만큼 증가
-    setOffset(options.offset + reviews.length);
-    setHasNext(paging.hasNext); // 리스폰스에 있는 paging 객체
-  };
+      const { reviews, paging } = result;
+      if (options.offset === 0) {
+        setItems(reviews);
+      } else {
+        // previtems : 현재 state 값
+        setItems((previtems) => [...previtems, ...reviews]);
+      }
+      // 데이터를 받아온 후 작업 offset limit값만큼 증가
+      setOffset(options.offset + reviews.length);
+      setHasNext(paging.hasNext); // 리스폰스에 있는 paging 객체
+    },
+    [getReviewsAsync]
+  );
 
   const handleLoadMore = () => {
     // 다음 페이지를 불러오는 함수
@@ -68,7 +71,7 @@ function App() {
 
   useEffect(() => {
     handleLoad({ order, offset: 0, limit: LIMIT });
-  }, [order]);
+  }, [order, handleLoad]);
 
   return (
     <div>
