@@ -2,14 +2,14 @@ import FoodForm from "./FoodForm";
 import FoodList from "./FoodList";
 import { createFood, deleteFood, getFoods, updateFood } from "./api";
 import { useEffect, useState } from "react";
+import useAsync from "./hooks/useAsync";
 
 function App() {
   // 최상위 컴포넌트
   const [order, setOrder] = useState("createdAt");
   const [items, setItems] = useState([]);
   const [cursor, setCursor] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState(null);
+  const [isLoading, loadingError, getFoodAsync] = useAsync(getFoods);
   const [search, setSearch] = useState("");
 
   const handleNewClick = () => setOrder("createdAt");
@@ -22,17 +22,9 @@ function App() {
   };
 
   const handleLoad = async (options) => {
-    let reslut;
-    try {
-      setIsLoading(true);
-      setLoadingError(null);
-      reslut = await getFoods(options);
-    } catch (error) {
-      setLoadingError(error);
-      return;
-    } finally {
-      setIsLoading(false);
-    }
+    const reslut = await getFoodAsync(options);
+    if (!reslut) return;
+
     const { foods, paging } = reslut;
     if (!options.cursor) {
       setItems(foods);

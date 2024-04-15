@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FileInput from "./FileInput";
+import useAsync from "./hooks/useAsync";
 
 const INITIAL_VALUES = {
   title: "",
@@ -16,8 +17,7 @@ function FoodForm({
   onSubmit,
 }) {
   const [values, setValues] = useState(initalValues);
-  const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 처리
-  const [submittingError, setSubmittingError] = useState(null); // 에러 처리
+  const [isSubmitting, submittingError, onSubmitAsync] = useAsync(onSubmit);
 
   // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
   function sanitize(type, value) {
@@ -49,18 +49,9 @@ function FoodForm({
     formData.append("title", values.title);
     formData.append("calorie", values.calorie);
     formData.append("content", values.content);
-    let result;
-    try {
-      setIsSubmitting(true);
-      setSubmittingError(null);
-      //result = await createFood(formData);
-      result = await onSubmit(formData);
-    } catch (error) {
-      setSubmittingError(error);
-      return;
-    } finally {
-      setIsSubmitting(false);
-    }
+
+    const result = await onSubmitAsync(formData);
+    if (!result) return;
 
     const { food } = result;
     onSubmitSuccess(food);
