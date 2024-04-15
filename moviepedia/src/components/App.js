@@ -1,6 +1,6 @@
 import ReviewList from "./ReviewList";
 import { useEffect, useState } from "react";
-import { createReview, getReviews, updateReview } from "./api";
+import { createReview, deleteReview, getReviews, updateReview } from "./api";
 import ReviewForm from "./ReviewForm";
 
 const LIMIT = 6;
@@ -19,9 +19,13 @@ function App() {
 
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
-  const handleDelete = (id) => {
-    const nextItems = items.filter((item) => item.id !== id);
-    setItems(nextItems);
+  const handleDelete = async (id) => {
+    const reslut = await deleteReview(id);
+    if (!reslut) return;
+
+    //prevItems : setter 함수에서 콜백으로 받는 매개변수
+    // state 변경 전의 값을 참조하고 있음 , 즉 삭제하기 전에 item들
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const handleLoad = async (options) => {
