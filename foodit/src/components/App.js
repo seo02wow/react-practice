@@ -4,9 +4,11 @@ import { createFood, deleteFood, getFoods, updateFood } from "./api";
 import { useCallback, useEffect, useState } from "react";
 import useAsync from "./hooks/useAsync";
 import LocaleContext from "../contexts/LocaleContext";
+import LocaleSelect from "./LocaleSelect";
 
 function App() {
   // 최상위 컴포넌트
+  const [locale, setLocale] = useState("ko");
   const [order, setOrder] = useState("createdAt");
   const [items, setItems] = useState([]);
   const [cursor, setCursor] = useState();
@@ -75,8 +77,9 @@ function App() {
   }, [order, search, handleLoad]);
 
   return (
-    <LocaleContext.Provider value="ko">
+    <LocaleContext.Provider value={locale}>
       <div>
+        <LocaleSelect value={locale} onChange={setLocale} />
         <div>
           <FoodForm
             onSubmitSuccess={handleCreateSuccess}

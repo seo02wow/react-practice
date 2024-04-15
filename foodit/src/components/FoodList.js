@@ -13,7 +13,7 @@ function FoodListItem({ item, onDelete, onEdit }) {
   return (
     <div className="FoodListItem">
       <img src={imgUrl} alt={title} />
-      <p>현재 언어 {locale}</p>
+      <p>현재 언어 : {locale}</p>
       <div>{title}</div>
       <div>{calorie}</div>
       <div>{content}</div>
