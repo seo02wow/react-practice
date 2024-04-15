@@ -3,14 +3,13 @@ import { useCallback, useEffect, useState } from "react";
 import { createReview, deleteReview, getReviews, updateReview } from "./api";
 import ReviewForm from "./ReviewForm";
 import useAsync from "./hooks/useAsync";
-import LocaleContext from "../contexts/LocaleContext";
+import { LocaleProvider } from "../contexts/LocaleContext";
 import LocaleSelect from "./LocaleSelect";
 
 const LIMIT = 6;
 
 function App() {
   // 최상위 컴포넌트
-  const [locale, setLocale] = useState("ko");
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
   const [offset, setOffset] = useState(0);
@@ -63,7 +62,7 @@ function App() {
     setItems((prevItems) => {
       const splitIdx = prevItems.findIndex((item) => item.id === review.id);
       // 수정할 인덱스 찾기
-      // 기존 리뷰 배열에서 같은 아이디에 해당하는 리뷰 갈아끼움 ..
+      // 기존 리뷰 배열에서 같은 아이디에 해당하는 리뷰 갈아끼움
       return [
         ...prevItems.slice(0, splitIdx),
         review,
@@ -77,9 +76,9 @@ function App() {
   }, [order, handleLoad]);
 
   return (
-    <LocaleContext.Provider value={locale}>
+    <LocaleProvider defalutValue="ko">
       <div>
-        <LocaleSelect value={locale} onChange={setLocale} />
+        <LocaleSelect />
         <div>
           <button onClick={handleNewstClick}>최신순</button>
           <button onClick={handleBestClick}>베스트순</button>
@@ -105,7 +104,7 @@ function App() {
         )}
         {loadingError?.message && <span>{loadingError.message}</span>}
       </div>
-    </LocaleContext.Provider>
+    </LocaleProvider>
   );
 }
 
