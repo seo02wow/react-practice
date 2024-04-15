@@ -1,14 +1,14 @@
 import { useContext, useState } from "react";
 import "./FoodList.css";
 import FoodForm from "./FoodForm";
-import LocaleContext from "../contexts/LocaleContext";
+import { useLocale } from "../contexts/LocaleContext";
 
 function FoodListItem({ item, onDelete, onEdit }) {
   const { imgUrl, title, calorie, content } = item;
   const handleDeleteClick = () => onDelete(item.id);
   const handleEditClick = () => onEdit(item.id);
 
-  const locale = useContext(LocaleContext);
+  const locale = useLocale();
 
   return (
     <div className="FoodListItem">
