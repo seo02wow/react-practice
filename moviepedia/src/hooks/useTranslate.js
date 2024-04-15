@@ -1,4 +1,4 @@
-import { useLocale } from "../../contexts/LocaleContext";
+import { useLocale } from "../contexts/LocaleContext";
 
 const dict = {
   ko: {

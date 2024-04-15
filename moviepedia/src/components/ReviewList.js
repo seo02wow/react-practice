@@ -2,7 +2,7 @@ import { useState } from "react";
 import Rating from "./Rating";
 import "./ReviewList.css";
 import ReviewForm from "./ReviewForm";
-import useTranslate from "./hooks/useTranslate";
+import useTranslate from "../hooks/useTranslate";
 
 function formatDate(value) {
   const date = new Date(value);

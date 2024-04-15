@@ -2,8 +2,8 @@ import { useState } from "react";
 import "./ReviewForm.css";
 import FileInput from "./FileInput";
 import Ratinginput from "./RatingInput";
-import useAsync from "./hooks/useAsync";
-import useTranslate from "./hooks/useTranslate";
+import useAsync from "../hooks/useAsync";
+import useTranslate from "../hooks/useTranslate";
 
 const INITIAL_VALUES = {
   title: "",
