@@ -19,16 +19,22 @@ function FoodListItem({ item, onDelete, onEdit }) {
   );
 }
 
-function FoodList({ items, onDelete }) {
+function FoodList({ items, onDelete, onUpdate, onUpdateSuccess }) {
   const [editngId, setEditingId] = useState(null);
+  const handleCancle = () => setEditingId(null);
 
   return (
     <ul className="FoodList">
       {items.map((item) => {
         if (item.id === editngId) {
-          const { imgUrl, content, title, calorie } = item;
-          const initalValues = { content, title, calorie };
-          const handleCancle = () => setEditingId(null);
+          const { id, imgUrl, content, title, calorie } = item;
+          const initalValues = { content, title, calorie, imgUrl: null };
+
+          const handleSubmit = (formData) => onUpdate(id, formData);
+          const handleSubmitSuccess = (food) => {
+            onUpdateSuccess(food);
+            setEditingId(null); // 입력 폼 닫음
+          };
 
           return (
             <li key={item.id}>
@@ -36,6 +42,8 @@ function FoodList({ items, onDelete }) {
                 initalValues={initalValues}
                 initalPreview={imgUrl}
                 onCanel={handleCancle}
+                onSubmit={handleSubmit}
+                onSubmitSuccess={handleSubmitSuccess}
               />
             </li>
           );

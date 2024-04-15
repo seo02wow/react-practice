@@ -14,6 +14,7 @@ function FoodForm({
   initalValues = INITIAL_VALUES,
   initalPreview,
   onCanel,
+  onSubmit,
 }) {
   const [values, setValues] = useState(initalValues);
   const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 처리
@@ -53,7 +54,8 @@ function FoodForm({
     try {
       setIsSubmitting(true);
       setSubmittingError(null);
-      result = await createFood(formData);
+      //result = await createFood(formData);
+      result = await onSubmit(formData);
     } catch (error) {
       setSubmittingError(error);
       return;
