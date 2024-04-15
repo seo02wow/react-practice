@@ -4,11 +4,13 @@ import { createReview, deleteReview, getReviews, updateReview } from "./api";
 import ReviewForm from "./ReviewForm";
 import useAsync from "./hooks/useAsync";
 import LocaleContext from "../contexts/LocaleContext";
+import LocaleSelect from "./LocaleSelect";
 
 const LIMIT = 6;
 
 function App() {
   // 최상위 컴포넌트
+  const [locale, setLocale] = useState("ko");
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
   const [offset, setOffset] = useState(0);
@@ -75,8 +77,9 @@ function App() {
   }, [order, handleLoad]);
 
   return (
-    <LocaleContext.Provider value={"ko"}>
+    <LocaleContext.Provider value={locale}>
       <div>
+        <LocaleSelect value={locale} onChange={setLocale} />
         <div>
           <button onClick={handleNewstClick}>최신순</button>
           <button onClick={handleBestClick}>베스트순</button>
