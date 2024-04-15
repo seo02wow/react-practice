@@ -1,6 +1,7 @@
 import { useState } from "react";
 import FileInput from "./FileInput";
 import useAsync from "./hooks/useAsync";
+import useTranslate from "./hooks/useTranslate";
 
 const INITIAL_VALUES = {
   title: "",
@@ -18,6 +19,7 @@ function FoodForm({
 }) {
   const [values, setValues] = useState(initalValues);
   const [isSubmitting, submittingError, onSubmitAsync] = useAsync(onSubmit);
+  const t = useTranslate();
 
   // 칼로리 값이 문자열로 처리되어 숫자로 바꿔줌 (인풋값이 숫자일 경우에만 처리)
   function sanitize(type, value) {
@@ -84,9 +86,9 @@ function FoodForm({
         value={values.content}
       ></input>
       <button type="submit" disabled={isSubmitting}>
-        확인
+        {t("confirm button")}
       </button>
-      {onCanel && <button onClick={onCanel}>취소</button>}
+      {onCanel && <button onClick={onCanel}> {t("cancel button")}</button>}
       {submittingError?.message && <div>{submittingError.message}</div>}
     </form>
   );
