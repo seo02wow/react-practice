@@ -5,12 +5,17 @@ import Card from "../components/Card";
 import CourseIcon from "../components/CourseIcon";
 import getCourseColor from "../utils/getCourseColor";
 import styles from "./CoursePage.module.css";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 function CoursePage() {
   const { courseSlug } = useParams();
   const course = getCourseBySlug(courseSlug);
   const courseColor = getCourseColor(course?.code);
+
+  // 코스 페이지를 랜더링할 때
+  if (!course) {
+    return <Navigate to="/courses" />;
+  }
 
   const headerStyle = {
     borderTopColor: courseColor,
