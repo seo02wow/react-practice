@@ -1,15 +1,17 @@
-import classNames from 'classnames';
-import { getQuestionById } from '../api';
-import Avatar from '../components/Avatar';
-import Card from '../components/Card';
-import Container from '../components/Container';
-import DateText from '../components/DateText';
-import Lined from '../components/Lined';
-import Warn from '../components/Warn';
-import styles from './QuestionPage.module.css';
+import classNames from "classnames";
+import { getQuestionById } from "../api";
+import Avatar from "../components/Avatar";
+import Card from "../components/Card";
+import Container from "../components/Container";
+import DateText from "../components/DateText";
+import Lined from "../components/Lined";
+import Warn from "../components/Warn";
+import styles from "./QuestionPage.module.css";
+import { useParams } from "react-router-dom";
 
 function QuestionPage() {
-  const question = getQuestionById('616825');
+  const { courseSlug } = useParams();
+  const question = getQuestionById(courseSlug);
 
   return (
     <>
